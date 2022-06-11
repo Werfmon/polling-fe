@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import React, { useEffect, createRef, useState } from "react";
 import styled from "styled-components";
+import { Header } from "../../Constants/Header";
 import {encodeBody} from '../../utils/encodeBody'
 const Container = styled.div`
   height: 100vh;
@@ -119,7 +120,7 @@ const Login: NextPage = () => {
     fetch(`${process.env.BACKEND_API}/login`, {
       method: "POST",
       headers: {
-        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "content-type": Header.CONTENT_TYPE,
       },
       body: encodeBody(data),
     })
