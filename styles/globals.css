@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&display=swap");
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: "Roboto", sans-serif;
+  border: none;
+  outline: none;
+}
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.getout-label {
+  font-size: 0.7rem !important;
+  top: -0.8rem !important;
+  color: #fff !important;
+}
