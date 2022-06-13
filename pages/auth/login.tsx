@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useEffect, createRef, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Header } from "../../Constants/Header";
 import {encodeBody} from '../../utils/encodeBody'
@@ -99,10 +99,10 @@ const Login: NextPage = () => {
   useEffect(() => {
     const labels = document.getElementsByClassName("login-label");
     const inputs = document.getElementsByClassName("login-input");
-    inputs[0].addEventListener("focus", (e) => {
+    inputs[0].addEventListener("focus", () => {
       labels[0].classList.add("getout-label");
     });
-    inputs[1].addEventListener("focus", (e) => {
+    inputs[1].addEventListener("focus", () => {
       labels[1].classList.add("getout-label");
     });
   }, []);
@@ -114,13 +114,11 @@ const Login: NextPage = () => {
       username: e.target.username.value,
       password: e.target.password.value,
     };
-    console.log(encodeBody(data));
-    
 
     fetch(`${process.env.BACKEND_API}/login`, {
       method: "POST",
       headers: {
-        "content-type": Header.CONTENT_TYPE,
+        "content-type": Header.CONTENT_TYPE_URLENCODED,
       },
       body: encodeBody(data),
     })
