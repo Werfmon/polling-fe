@@ -128,7 +128,7 @@ const Registration: NextPage = () => {
         .then(res => res.ok ? goToMainPage() : alert("Something went wrong"))
         .catch((err) => console.error(err));
     } else {
-        alert("Passwords do not match")
+        alert("Passwords don`t match");
     }
   }
 

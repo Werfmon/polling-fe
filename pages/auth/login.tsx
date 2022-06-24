@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
-import React, { useEffect } from "react";
+import React, { ReactFragment, useEffect } from "react";
 import styled from "styled-components";
 import { Header } from "../../Constants/Header";
 import {encodeBody} from '../../utils/encodeBody'
+import { goToRegistrationPage } from "../../utils/redirect/goToRegistrationPage";
+
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
@@ -60,10 +62,7 @@ const Input = styled.input`
   }
 `;
 const Submit = styled.button`
-  margin-right: 2rem;
-  align-self: flex-end;
   background-color: unset;
-  margin-top: 1rem;
   color: #fff;
   cursor: pointer;
   font-size: 1.2rem;
@@ -89,6 +88,19 @@ const Label = styled.label`
   font-size: 1rem;
   top: 0;
 `;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: calc(100% - 4rem);
+  height: 2rem;
+`
+const RedirectButton = styled.button`
+  background-color: unset;
+  color: #fff;
+  cursor: pointer;
+`
 
 interface LoginData {
   username: string;
@@ -122,7 +134,7 @@ const Login: NextPage = () => {
       },
       body: encodeBody(data),
     })
-      .then((res) => res.json())
+      .then((res) => res.ok ? res.json() : alert("Bad login"))
       .then((resData) => sessionStorage.setItem("token", resData.token))
       .catch((err) => console.error(err));
   }
@@ -140,7 +152,10 @@ const Login: NextPage = () => {
             <Input name="password" className="login-input" type="password" />
             <Label className="login-label">Password</Label>
           </InputContainer>
-          <Submit>Login</Submit>
+          <ButtonContainer>
+            <Submit>Login</Submit>
+            <RedirectButton onClick={goToRegistrationPage}>Not registred yet?</RedirectButton>
+          </ButtonContainer>
         </Form>
       </FormContainer>
     </Container>
