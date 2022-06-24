@@ -2,6 +2,7 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { NextPage } from "next";
 import styled from "styled-components";
+
 import { isLogged } from "../utils/isLogged";
 import { goToCreatePage } from "../utils/redirect/goToCreatePage";
 import { goToJoinPage } from "../utils/redirect/goToJoinPage";
