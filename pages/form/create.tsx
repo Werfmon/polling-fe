@@ -128,18 +128,56 @@ const CreateButtonContainer = styled.div`
   width: 90%;
 
 `
+interface FetchData {
+  name: string,
+  description: string,
+  questions: Array<Object>
+}
 const Create: NextPage = () => {
   const [questions, setQuestions] = useState([null]);
-  function addQuestion(e: any) {
+  function addQuestion(e: any): void {
     e.preventDefault();
     setQuestions([...questions, null]);
+  }
+  function saveForm(e: any): void {
+    e.preventDefault();
+    const answers = e.target.answer;
+    const questions = e.target.questionName;
+
+    const data: FetchData = {
+      name: e.target.formName.value,
+      description: e.target.formDescription.value,
+      questions: []
+    };
+
+    for (let i = 0; i < answers.length; i += 3) {
+      data.questions.push(
+        {
+          question: questions[i / 3].value,
+          answers: [
+            {
+             checked: e.target['correct' + i / 3][0].checked,
+             answer: answers[i].value,
+            },
+            {
+              checked: e.target['correct' + i / 3][1].checked,
+              answer: answers[i + 1].value,
+            },
+            {
+             checked: e.target['correct' + i / 3][2].checked,
+             answer: answers[i + 2].value,
+            }
+          ]
+        }
+      )
+    }
   }
 
   return (
     <Container>
       <h1>Create Form</h1>
       <FormContainer>
-        <Form>
+        <Form onSubmit={saveForm}>
           <InputContainer>
             <FormInputName
               type="text"
@@ -157,18 +195,18 @@ const Create: NextPage = () => {
           </InputContainer>
           {questions.map((_, i) => (
             <QuestionContainer className='questionContainer'>
-              <QuestionInput placeholder="Question..." />
+              <QuestionInput name="questionName" placeholder="Question..." />
                 <AnswerContainer>
                   <CorrectRadioContainer>
-                    <AnswerInput placeholder="Answer..." />
+                    <AnswerInput name='answer' placeholder="Answer..." />
                     <CorrectRadio name={"correct" + i} type="radio" />
                   </CorrectRadioContainer>
                   <CorrectRadioContainer>
-                    <AnswerInput placeholder="Answer..." />
+                    <AnswerInput name='answer' placeholder="Answer..." />
                     <CorrectRadio name={"correct" + i} type="radio" />
                   </CorrectRadioContainer>
                   <CorrectRadioContainer>
-                    <AnswerInput placeholder="Answer..." />
+                    <AnswerInput name='answer' placeholder="Answer..." />
                     <CorrectRadio name={"correct" + i} type="radio" />
                   </CorrectRadioContainer>
                 </AnswerContainer>
