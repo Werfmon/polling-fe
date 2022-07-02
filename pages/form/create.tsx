@@ -3,6 +3,9 @@ import type { NextPage } from "next";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import { Header } from "../../Constants/Header";
+import { isLogged } from "../../utils/isLogged";
+import { goToLoginPage } from "../../utils/redirect/goToLoginPage";
 const Container = styled.div`
   background-color: #000;
   min-height: 100vh;
@@ -71,7 +74,6 @@ const QuestionInput = styled.input`
 const AnswerInput = styled.input`
   background-color: unset;
   margin-top: 30px;
-  height: 2rem;
   font-size: 2rem;
   padding: 10px;
   color: #fff;
@@ -141,6 +143,13 @@ const Create: NextPage = () => {
   }
   function saveForm(e: any): void {
     e.preventDefault();
+    
+    if(!isLogged()) {
+      alert('You must be logged');
+      goToLoginPage()
+    }
+    const token: string = isLogged().toString();
+
     const answers = e.target.answer;
     const questions = e.target.questionName;
 
@@ -149,29 +158,46 @@ const Create: NextPage = () => {
       description: e.target.formDescription.value,
       questions: []
     };
-
+    
     for (let i = 0; i < answers.length; i += 3) {
       data.questions.push(
         {
-          question: questions[i / 3].value,
+          title: questions[i / 3] ? questions[i / 3].value : questions.value,
+          description: "",
           answers: [
             {
-             checked: e.target['correct' + i / 3][0].checked,
-             answer: answers[i].value,
+             correct: e.target['correct' + i / 3][0].checked,
+             text: answers[i].value,
             },
             {
-              checked: e.target['correct' + i / 3][1].checked,
-              answer: answers[i + 1].value,
+              correct: e.target['correct' + i / 3][1].checked,
+              text: answers[i + 1].value,
             },
             {
-             checked: e.target['correct' + i / 3][2].checked,
-             answer: answers[i + 2].value,
+             correct: e.target['correct' + i / 3][2].checked,
+             text: answers[i + 2].value,
             }
           ]
         }
-      )
+      );
     }
+
+    fetch(`${process.env.BACKEND_API}/form/create`, {
+      method: 'POST',
+      headers: {
+        'content-type': Header.CONTENT_TYPE_JSON,
+        Authorization: `Bearer ${token}` 
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => {
+      res.status === 403 && goToLoginPage()
+      return res.json() 
+    })
+    .then(code => alert("Code for Form: " + code.token))
+    .catch(err => console.error(err))
   }
+  9
 
   return (
     <Container>
@@ -194,12 +220,12 @@ const Create: NextPage = () => {
             />
           </InputContainer>
           {questions.map((_, i) => (
-            <QuestionContainer className='questionContainer'>
+            <QuestionContainer key={i} className='questionContainer'>
               <QuestionInput name="questionName" placeholder="Question..." />
                 <AnswerContainer>
                   <CorrectRadioContainer>
                     <AnswerInput name='answer' placeholder="Answer..." />
-                    <CorrectRadio name={"correct" + i} type="radio" />
+                    <CorrectRadio defaultChecked name={"correct" + i} type="radio" />
                   </CorrectRadioContainer>
                   <CorrectRadioContainer>
                     <AnswerInput name='answer' placeholder="Answer..." />

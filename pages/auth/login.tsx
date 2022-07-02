@@ -3,6 +3,7 @@ import React, { ReactFragment, useEffect } from "react";
 import styled from "styled-components";
 import { Header } from "../../Constants/Header";
 import {encodeBody} from '../../utils/encodeBody'
+import { goToMainPage } from "../../utils/redirect/goToMainPage";
 import { goToRegistrationPage } from "../../utils/redirect/goToRegistrationPage";
 
 const Container = styled.div`
@@ -135,13 +136,17 @@ const Login: NextPage = () => {
       body: encodeBody(data),
     })
       .then((res) => res.ok ? res.json() : alert("Bad login"))
-      .then((resData) => sessionStorage.setItem("token", resData.token))
+      .then((resData) => {
+        sessionStorage.setItem("token", resData.token)
+        if(resData.token) goToMainPage();
+      })
       .catch((err) => console.error(err));
   }
 
   return (
     <Container>
       <FormContainer>
+        <h1>Create Form</h1>
         <UpItem>Login</UpItem>
         <Form onSubmit={e => login(e)}>
           <InputContainer>
